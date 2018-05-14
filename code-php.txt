@@ -1,1 +1,92 @@
-Code php
+<?php
+    if(isset($_GET['newsid'])){
+        include 'libraries/ketnoicsdl.php';
+        $idtintuc = $_GET['newsid'];
+        $stringtintuc = "Select * from tin WHERE id =:id_tintuc";
+        $stmtintuc = $conn->prepare($stringtintuc);
+        $stmtintuc->bindParam(':id_tintuc',$idtintuc);
+        $stmtintuc->execute();
+        $datatintuc = $stmtintuc->fetch();
+        $tieude = $datatintuc['tieude'];
+        $noidung = $datatintuc['noidung'];
+        $iddinhkem = $datatintuc['dinhkem_id'];
+        $phongban = $datatintuc['phongban_id'];
+        $stringdinhkem = "Select * from dinhkem WHERE id =:id";
+        $stmdinhkem = $conn->prepare($stringdinhkem);
+        $stmdinhkem->bindParam(':id',$iddinhkem);
+        $stmdinhkem->execute();
+        $datadinhkem = $stmdinhkem->fetch();
+        $link = $datadinhkem['url'];
+        $tendinhkem = $datadinhkem['tendinhkem'];
+        $stringphongban = "Select * from phongban WHERE id =:id";
+        $stmphongban = $conn->prepare($stringphongban);
+        $stmphongban->bindParam(':id',$phongban);
+        $stmphongban->execute();
+        $dataphongban = $stmphongban->fetch();
+        $kihieuphongban = $dataphongban['kyhieu'];
+    }
+?>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>YHV Intranet Homepage</title>
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="css/cssnews.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!--    Co respond.js thi 1 s? thu?c tính c?a css m?i có hi?u l?c trên ie8-->
+    <script type="text/javascript" src="js/respond.min.js"></script>
+</head>
+<body>
+<style>
+    body{
+        background-color: #d6e9c6;
+    }
+</style>
+<form>
+    <div class="CTtin">
+        <table style="border-collapse: separate; width: 80%;" border="">
+            <thead>
+            <th> <h2>
+                    <?php echo $tieude?>
+                </h2></th>
+            </thead>
+            <tbody>
+            <tr style="height: 180px">
+                <td><p>
+                        <?php echo $noidung?>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row attach">
+                        <?php
+                            if(strlen($link)!=0){
+                                echo "<span>Attach File : </span><a href='$link'>$tendinhkem</a>";
+                            }
+                            else
+                            {
+                                echo '<span>Attach File : </span><a href="#"></a>';
+                            }
+                        ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row bophan">
+                        <p>[<?php echo $kihieuphongban?>] - Yazaki Haiphong Vietnam Co.,Ltd</p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <a href="thenews/news.php" class="btn btn-primary"><span class="glyphicon glyphicon-home"></span> Homepage</a>
+    <div class="footertin">
+        <span><img src="images/icon.png" style="width: 10%;"></span><span> Copyright © 2015 - System Yazaki Haiphong Vietnam Co.,Ltd.</span>
+</form>
+</body>
+</html>
